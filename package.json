@@ -1,0 +1,48 @@
+{
+    "name": "lecture-starter-ts",
+    "version": "2.0.0",
+    "scripts": {
+        "setup": "npm install && npx simple-git-hooks",
+        "dev": "vite --host",
+        "build": "tsc && vite build",
+        "preview": "vite preview",
+        "lint": "eslint --ext .ts .",
+        "lint:fix": "npm run lint -- --fix"
+    },
+    "license": "ISC",
+    "devDependencies": {
+        "@commitlint/types": "^17.4.4",
+        "@typescript-eslint/eslint-plugin": "^5.62.0",
+        "@typescript-eslint/parser": "^5.62.0",
+        "commitlint": "^17.6.5",
+        "eslint": "^8.46.0",
+        "eslint-config-airbnb-typescript": "^17.0.0",
+        "eslint-config-prettier": "^8.8.0",
+        "eslint-plugin-prettier": "^5.0.0",
+        "lint-staged": "^13.2.2",
+        "prettier": "^3.0.0",
+        "simple-git-hooks": "^2.8.1",
+        "typescript": "^5.0.2",
+        "vite": "^4.4.0"
+    },
+    "dependencies": {
+        "@popperjs/core": "^2.11.6",
+        "at": "^0.0.1-security",
+        "bootstrap": "^5.2.3",
+        "root": "^3.2.0",
+        "the": "^1.0.2"
+    },
+    "engines": {
+        "node": ">=16.0",
+        "npm": ">=8.0"
+    },
+    "simple-git-hooks": {
+        "pre-commit": "npx lint-staged",
+        "commit-msg": "npx commitlint --edit $1"
+    },
+    "browserslist": [
+        "> 1%",
+        "last 2 versions",
+        "not dead"
+    ]
+}

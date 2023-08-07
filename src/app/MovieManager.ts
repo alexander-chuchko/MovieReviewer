@@ -36,8 +36,7 @@ export class MovieManager {
                 await this.loadingTheSelectedCategory(selectedId);
             });
         });
-
-        this.subscribeToTheClickEventOnHeart.bind(this);
+        this.subscribeElementsToTheClickEventOnHeart.bind(this);
         this.removeAllElements('favorite-movies');
         await this.addElementsToFavorite();
     }
@@ -60,7 +59,7 @@ export class MovieManager {
             for (const movie of movieDTOs) {
                 this.addElement(movie, childClassName, parentClassName);
             }
-            this.subscribeToTheClickEventOnHeart();
+            this.subscribeElementsToTheClickEventOnHeart('.bi-heart-fill');
             this.addRandomlySelectedMovie(movieDTOs);
         }
     }
@@ -166,7 +165,7 @@ export class MovieManager {
                     for (const movie of movieDTOs) {
                         this.addElement(movie, childClassName, parentClassName);
                     }
-                    this.subscribeToTheClickEventOnHeart();
+                    this.subscribeElementsToTheClickEventOnHeart('.bi-heart-fill');
                 }
 
                 break;
@@ -181,7 +180,7 @@ export class MovieManager {
                     for (const movie of movieDTOs) {
                         this.addElement(movie, childClassName, parentClassName);
                     }
-                    this.subscribeToTheClickEventOnHeart();
+                    this.subscribeElementsToTheClickEventOnHeart('.bi-heart-fill');
                 }
                 break;
 
@@ -195,7 +194,7 @@ export class MovieManager {
                     for (const movie of movieDTOs) {
                         this.addElement(movie, childClassName, parentClassName);
                     }
-                    this.subscribeToTheClickEventOnHeart();
+                    this.subscribeElementsToTheClickEventOnHeart('.bi-heart-fill');
                 }
                 break;
 
@@ -222,11 +221,37 @@ export class MovieManager {
         }
     }
 
-    subscribeToTheClickEventOnHeart() {
-        const svgElements = document.querySelectorAll('.bi-heart-fill');
+    subscribeElementsToTheClickEventOnHeart(nameElement: string) {
+        const svgElements = document.querySelectorAll(nameElement); //'.bi-heart-fill'
         svgElements.forEach((svgElement) => {
             svgElement.addEventListener('click', this.handleClick.bind(this));
         });
+    }
+
+    subscribeElementToTheClickEventOnHeart(element: Element) {
+        element.addEventListener('click', this.handleClick.bind(this));
+    }
+
+    getElementByAboutId(aboutId: string): Element | null {
+        const selector = `svg[aboutid="${aboutId}"]`;
+        const element = document.querySelector(selector);
+        return element;
+    }
+
+    unsubscribeFromAnEvent(nameElement: string) {
+        const allElements = document.querySelectorAll(nameElement);
+        allElements.forEach((element) => {
+            element.removeEventListener('click', this.handleClick);
+        });
+    }
+
+    getFavoriteMoviesSVGElements() {
+        const favoriteMoviesContainer = document.getElementById('favorite-movies');
+        if (favoriteMoviesContainer) {
+            const svgElements = favoriteMoviesContainer.querySelectorAll('svg.bi-heart-fill');
+            return svgElements;
+        }
+        return [];
     }
 
     removeAllElements(nameClass: string) {
@@ -237,8 +262,8 @@ export class MovieManager {
     }
 
     async addElementsToFavorite() {
-        let childClassName = 'col-12 p-2';
-        let parentClassName = 'favorite-movies';
+        const childClassName = 'col-12 p-2';
+        const parentClassName = 'favorite-movies';
         const mapper = new Mapper();
         const helper = new Helper();
         const movieService = new MovieService();
@@ -266,16 +291,26 @@ export class MovieManager {
                 let resultOperation = helper.isMovieInFavorites(parseInt(id));
                 if (!resultOperation) {
                     helper.addMovieToFavorites(parseInt(id));
-                    grandparentDiv.setAttribute('fill', 'red');
+                    this.changeColorAllElements(id, 'red');
                     this.removeAllElements('favorite-movies');
                     this.addElementsToFavorite();
                 } else {
                     helper.removeMovieFromFavorites(parseInt(id));
-                    grandparentDiv.setAttribute('fill', '#ff000078');
+                    this.changeColorAllElements(id, '#ff000078');
                     this.removeAllElements('favorite-movies');
                     this.addElementsToFavorite();
                 }
             }
         }
+    }
+
+    changeColorAllElements(id: string, setColor: string) {
+        const allElements = document.querySelectorAll('svg[aboutid]');
+        allElements?.forEach((svgElement) => {
+            const getId = svgElement.getAttribute('aboutid');
+            if (id === getId) {
+                svgElement.setAttribute('fill', setColor);
+            }
+        });
     }
 }
